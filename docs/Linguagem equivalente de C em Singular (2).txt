@@ -1,0 +1,106 @@
+﻿//Formalização de Linguagens
+//Exemplo de Formalidade de linguagens
+//Atividades
+//1 - Produzir um programa exemplo com a sua linguagem;
+//____________________________________________________
+
+// Programa Exemplo do Código em C, equivalente na Linguagem Singular
+======================================================================
+
+// 1. DEFINIÇÃO DE REGISTRO GLOBAL
+REGISTRO Aluno
+    INT id
+    TXT nome
+    VETOR REAL notas[3]   // Vetor como membro do registro
+    REAL media
+FIM_REGISTRO
+
+// 2. DECLARAÇÃO DE VARIÁVEL GLOBAL
+INT g_totalOperacoes <- 0
+
+// --------------------------------------------------------------------------------------
+// 3. MÓDULO COM RETORNO E PASSAGEM DE PARÂMETROS
+// --------------------------------------------------------------------------------------
+MODULO calcularMedia <VETOR REAL notas[], INT qtd> RETORNA REAL
+    REAL soma <- 0.0
+    INT i
+    
+    # i <- 0 DE 1 ATE qtd - 1
+        soma <- soma + notas[i]
+    FIM_#
+    
+    g_totalOperacoes++ // Incrementa variável global
+    
+    RETORNA soma / qtd
+FIM_MODULO
+
+// --------------------------------------------------------------------------------------
+// 4. MÓDULO SEM RETORNO (ATUALIZA REGISTRO)
+// --------------------------------------------------------------------------------------
+MODULO atualizarMedia <Aluno aluno>
+    // Modifica o campo 'media' do registro
+    aluno{media} <- chamar calcularMedia <aluno{notas}, 3>
+    g_totalOperacoes++
+FIM_MODULO
+
+// --------------------------------------------------------------------------------------
+// 5. MÓDULO SEM RETORNO (EXIBIÇÃO DE DADOS)
+// --------------------------------------------------------------------------------------
+MODULO exibirAluno <Aluno aluno>
+    INT i
+    
+    ESCREVER "ID: " & aluno{id} & " | Nome: " & aluno{nome}
+    ESCREVER "Notas: "
+    
+    # i <- 0 DE 1 ATE 2
+        ESCREVER aluno{notas}[i] & " "
+    FIM_#
+    
+    ESCREVER "Média: " & aluno{media}
+    g_totalOperacoes++
+FIM_MODULO
+
+// --------------------------------------------------------------------------------------
+// EXECUÇÃO PRINCIPAL
+// --------------------------------------------------------------------------------------
+INICIO
+    INT i
+    VETOR Aluno turma[3]
+    
+    // Inicialização dos elementos da turma
+    turma[0]{id} <- 101
+    turma[0]{nome} <- "Ana Silva"
+    turma[0]{notas}[0] <- 8.5
+    turma[0]{notas}[1] <- 7.0
+    turma[0]{notas}[2] <- 9.0
+    turma[0]{media} <- 0.0
+
+    turma[1]{id} <- 102
+    turma[1]{nome} <- "Bruno Costa"
+    turma[1]{notas}[0] <- 6.0
+    turma[1]{notas}[1] <- 5.5
+    turma[1]{notas}[2] <- 7.0
+    turma[1]{media} <- 0.0
+
+    turma[2]{id} <- 103
+    turma[2]{nome} <- "Carla Souza"
+    turma[2]{notas}[0] <- 9.5
+    turma[2]{notas}[1] <- 9.0
+    turma[2]{notas}[2] <- 10.0
+    turma[2]{media} <- 0.0
+
+    ESCREVER "------- REGISTRO E PROCESSAMENTO DE ALUNOS —----"
+
+    // Processa a média de cada aluno
+    # i <- 0 DE 1 ATE 2
+        chamar atualizarMedia <turma[i]>
+    FIM_#
+
+    // Exibe os dados de cada aluno
+    # i <- 0 DE 1 ATE 2
+        chamar exibirAluno <turma[i]>
+    FIM_#
+
+    ESCREVER "==========================================="
+    ESCREVER "Total de operações executadas no sistema (Global): " & g_totalOperacoes
+FIM
